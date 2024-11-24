@@ -1,10 +1,22 @@
-import React from "react";
-import list from "./list.json";
+import React, { useState ,useEffect} from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import Cards from "./Cards";
+import axios from "axios";
 export default function Freebook(){
+  let [books,setBooks]=useState([]);
+  useEffect(()=>{
+    const getBook=async()=>{
+    try{
+     
+    const res=await axios.get("http://localhost:4001/book");
+    setBooks(res.data);
+    }
+    catch(err){
+    console.log(err);
+    }}
+    getBook(); } ,[])
     var settings = {
         dots: true,
         infinite: false,
@@ -39,9 +51,9 @@ export default function Freebook(){
           }
         ]
       };
-const filterData=list.filter((book)=>book.category==="free");
+const filterData=books.filter((book)=>book.category==="free");
 console.log(filterData);
-console.log("hi");
+ 
 return (<>
 <div className="max-w-screeen-2xl container mx-auto md:px-20 px-4 ">
     <div><h1 className="font-bold text-black-400 text-xl md:pb-3 ">Free Offered Courses</h1>

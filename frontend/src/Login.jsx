@@ -1,13 +1,37 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import {useForm} from "react-hook-form";
+import axios from "axios";
+import toast from 'react-hot-toast';
 export default function Login(){
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit= (data) => console.log(data);
+  const onSubmit =async (data) =>{
+    const userInfo={
+     email:data.email,
+     password:data.password
+    }
+    await axios.post("http://localhost:4001/user/login",userInfo)//send the data from form to the /login route
+    .then((res)=>{console.log(res)
+      if(res.data){
+        toast.success("login successfull");
+        document.getElementById("my_modal_3").close()
+        setTimeout(()=>{window.location.reload();},1000);
+      }
+      localStorage.setItem("users",JSON.stringify(res.data.user));//res.data.user contain the createdUser data which get stored in the 
+      //local storage
+  
+    })
+    .catch((err)=>{
+      if(err.response){console.log(err);
+        toast.error("No such user exist");
+      }
+      
+    })
+    } 
     return (<>
     <div>
     <dialog id="my_modal_3" className="modal">
